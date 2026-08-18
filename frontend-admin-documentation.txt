@@ -1,0 +1,111 @@
+# Frontend Admin Dashboard Documentation
+
+## 📌 Overview
+This documentation outlines the architecture, component structure, and business logic of the Frontend Admin Dashboard for the e-commerce application. The dashboard provides a secure, centralized interface for authorized administrators to manage products, monitor orders, and control user accounts. It is built as a Single Page Application (SPA) focusing on a clean, modern, "Shopify-style" UI/UX.
+
+---
+
+## 🛠️ Technology Stack
+* **Framework:** React.js (Vite)
+* **Styling:** Tailwind CSS (Utility-first CSS framework for responsive design)
+* **Routing:** React Router DOM (v6)
+* **HTTP Client:** Axios (For REST API communication)
+* **Icons:** React Icons (Material Design / `Md` icons)
+* **Data Processing:** PapaParse (For CSV Export/Import functionality)
+* **State Management:** React Hooks (`useState`, `useEffect`) and Local Storage
+
+---
+
+## 📂 Directory Structure (Admin Specific)
+
+```text
+/frontend/src
+├── /components
+│   ├── AdminLayout.jsx         # Wrapper component enforcing admin security
+│   └── AdminSidebar.jsx        # Responsive navigation sidebar & logout logic
+├── /screens
+│   ├── AdminDashboard.jsx      # Main landing page for analytics & stats
+│   ├── AdminProductList.jsx    # Product inventory data table
+│   ├── AdminProductCreate.jsx  # Form to add new products & upload images
+│   ├── AdminProductEdit.jsx    # Form to update existing products
+│   ├── AdminOrderList.jsx      # Table of all customer orders
+│   ├── AdminOrderDetails.jsx   # Detailed order view & fulfillment controls
+│   ├── AdminCustomerList.jsx   # User table with CSV Import/Export
+│   ├── AdminCustomerCreate.jsx # Form to register users from the dashboard
+│   └── AdminCustomerEdit.jsx   # Form to update user details and roles
+└── App.jsx                     # Global routing configuration
+🛡️ Authentication, Security & Session Logic
+1. Route Protection (AdminLayout.jsx)
+The dashboard is strictly protected. The AdminLayout component acts as a security wrapper (Guard).
+
+Logic: Upon mounting, it retrieves userInfo from localStorage. It verifies if the user exists, possesses a valid JWT token, and has the isAdmin flag set to true.
+
+Action: If validation fails, it instantly redirects the user to the /login route, preventing unauthorized access to any nested admin components via the <Outlet />.
+
+2. API Authorization (Axios)
+Every API request originating from the admin screens includes an authorization header:
+
+JavaScript
+const config = {
+  headers: { Authorization: `Bearer ${userInfo.token}` }
+};
+3. Logout Mechanism (AdminSidebar.jsx)
+The sidebar contains a dedicated logout function that securely terminates the admin session by removing userInfo and cartItems from localStorage, dispatching necessary events, and redirecting the administrator to the public login screen.
+
+🧩 Core Feature Modules
+📊 1. Dashboard Analytics (AdminDashboard.jsx)
+Overview Widgets: Fetches aggregate data from backend routes to display total sales revenue, total active users, and total orders placed.
+
+Recent Activity: Displays a brief snapshot of the most recent orders requiring attention or fulfillment.
+
+📦 2. Product Management
+List View (AdminProductList): Fetches GET /api/products. Displays a data table with product images, names, prices, and stock status. Includes a delete confirmation prompt (DELETE /api/products/:id).
+
+Creation & Editing (AdminProductCreate, AdminProductEdit): Forms to manage product attributes.
+
+HTML Description Handling: The text area for the description is configured to accept and safely transmit HTML strings to the backend, enabling rich text rendering (accordions, lists) on the public storefront.
+
+Multiple Image Upload Logic: Integrates a file input that triggers POST /api/upload requests using multipart/form-data. The backend returns static file paths, which are appended to the images array state to support product image sliders.
+
+🛒 3. Order Management
+List View (AdminOrderList): Fetches GET /api/orders. Displays order IDs, customer names, dates, total amounts, and color-coded status badges for Payment and Delivery.
+
+Order Details (AdminOrderDetails): Fetches GET /api/orders/:id. Displays the shipping address, order items (including exact sizes and quantities), and payment summary.
+
+Fulfillment Logic: Includes a "Mark as Delivered" button that triggers PUT /api/orders/:id/deliver to update the fulfillment status in real-time.
+
+👥 4. Customer (User) Management
+List View (AdminCustomerList): Fetches GET /api/users. Displays user demographics and roles.
+
+CSV Import/Export (PapaParse):
+
+Export: Maps user data into an array of objects and triggers a browser download as a .csv file.
+
+Import: Parses an uploaded .csv file. Iterates through the rows and sequentially triggers POST /api/users to bulk-register users.
+
+Role Management (AdminCustomerEdit): Includes a crucial "Is Admin" toggle switch that manipulates the isAdmin boolean, effectively granting or revoking dashboard access for specific users.
+
+🧭 Routing Architecture (App.jsx)
+The routing is structured using nested routes under the /admin path to maintain layout consistency.
+
+JavaScript
+<Route element="{<AdminLayout" path="/admin"/>}>
+  <Route element="{<AdminDashboard" index/>} />
+  
+  <Route element="{<AdminProductList" path="products"/>} />
+  <Route element="{<AdminProductCreate" path="products/create"/>} />
+  <Route element="{<AdminProductEdit" path="products/:id/edit"/>} />
+  
+  <Route element="{<AdminOrderList" path="orders"/>} />
+  <Route element="{<AdminOrderDetails" path="orders/:id"/>} />
+  
+  <Route element="{<AdminCustomerList" path="customers"/>} />
+  <Route element="{<AdminCustomerCreate" path="customers/create"/>} />
+  <Route element="{<AdminCustomerEdit" path="customers/:id/edit"/>} />
+</Route>
+🎨 UI/UX Implementation Details
+Mobile Responsiveness: The AdminSidebar utilizes Tailwind's translate utility classes (-translate-x-full to translate-x-0) alongside a state toggle (isSidebarOpen) to function as a hidden drawer on mobile devices and a fixed sidebar on desktops.
+
+Visual Feedback: All asynchronous operations implement localized loading states (loading, updateLoading) to disable buttons and render loading spinners, preventing duplicate API mutations.
+
+Error Handling: Try-catch blocks wrap all Axios requests. Errors caught from the backend (e.g., err.response.data.message) are rendered in designated error alert boxes to guide the administrator.
