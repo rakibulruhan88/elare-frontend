@@ -147,7 +147,7 @@ const HomeScreen = () => {
       <div className="bg-[#f9f9f9] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end border-b border-[#eaeaea] mb-10">
-            <h2 className="text-[24px] md:text-[28px] font-extrabold text-black uppercase tracking-wide pb-3 relative">
+            <h2 className="text-[18px] md:text-[28px] font-extrabold text-black uppercase tracking-wide pb-3 relative">
               Featured Categories
               <span className="absolute bottom-[-1px] left-0 w-full h-[2px] bg-[#dd3333]"></span>
             </h2>
