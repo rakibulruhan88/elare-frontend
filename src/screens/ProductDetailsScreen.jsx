@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { useQuery, useQueryClient } from '@tanstack/react-query'; // React Query যুক্ত করা হলো
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Thumbs, FreeMode } from 'swiper/modules';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,7 +18,7 @@ import 'swiper/css/free-mode';
 const ProductDetailsScreen = () => {
   const { id: productId } = useParams();
   const navigate = useNavigate();
-  const queryClient = useQueryClient(); // রিভিউ দেওয়ার পর সাথে সাথে ডেটা রিফ্রেশ করার জন্য
+  const queryClient = useQueryClient();
   
   const [qty, setQty] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -34,13 +34,11 @@ const ProductDetailsScreen = () => {
     ? JSON.parse(localStorage.getItem('userInfo')) 
     : null;
 
-  // স্ক্রল বাগ ফিক্স: পেজ লোড হলেই যেন শুরুতে থাকে (ফুটারে না যায়)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    setQty(1); // নতুন প্রোডাক্টে গেলে কোয়ান্টিটি যেন ১ হয়ে যায়
+    setQty(1);
   }, [productId]);
 
-  // ১. প্রোডাক্টের ডেটা ফেচ করা (ক্যাশিং সহ)
   const { 
     data: product = { reviews: [] }, 
     isLoading: loading, 
@@ -53,17 +51,15 @@ const ProductDetailsScreen = () => {
     }
   });
 
-  // ২. রিলেটেড প্রোডাক্ট ফেচ করা 
   const { data: relatedProducts = [] } = useQuery({
     queryKey: ['relatedProducts', productId],
     queryFn: async () => {
       const { data } = await axios.get(`/api/products/${productId}/related`);
       return data;
     },
-    enabled: !!productId // শুধুমাত্র productId থাকলেই কল হবে
+    enabled: !!productId
   });
 
-  // ৩. রিভিউ দেওয়ার পারমিশন আছে কি না ফেচ করা
   const { data: isEligibleToReview = false, isFetched: eligibilityChecked } = useQuery({
     queryKey: ['reviewEligibility', productId, userInfo?.token],
     queryFn: async () => {
@@ -135,7 +131,6 @@ const ProductDetailsScreen = () => {
       setComment('');
       setRating(5);
       
-      // রিভিউ অ্যাড হওয়ার সাথে সাথে ক্যাশ রিফ্রেশ করে নতুন রিভিউ দেখাবে
       queryClient.invalidateQueries(['product', productId]);
       
       setTimeout(() => setReviewSuccess(false), 3000);
@@ -159,7 +154,6 @@ const ProductDetailsScreen = () => {
   return (
     <div className="bg-white min-h-screen pb-20 font-sans">
       
-      {/* Top Banner */}
       <div className="bg-gray-900 text-white py-2 text-[10px] sm:text-xs font-medium tracking-widest uppercase flex justify-center items-center gap-4 sm:gap-8 overflow-hidden px-2 text-center">
         <span className="flex items-center gap-1 sm:gap-2"><MdVerifiedUser /> Authentic</span>
         <span className="flex items-center gap-1 sm:gap-2"><MdLocalShipping /> Free Shipping</span>
@@ -169,7 +163,6 @@ const ProductDetailsScreen = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           
-          {/* Product Images Area */}
           <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4 h-auto md:h-[650px] md:sticky md:top-8">
             <div className="w-full md:w-24 h-20 md:h-full">
               <Swiper
@@ -209,7 +202,6 @@ const ProductDetailsScreen = () => {
             </div>
           </div>
 
-          {/* Product Details Area */}
           <div className="lg:col-span-5 flex flex-col pt-0 sm:pt-4">
             {product.collections && product.collections.length > 0 && (
               <p className="text-[11px] text-gray-500 font-bold tracking-widest uppercase mb-2 sm:mb-3">
@@ -242,33 +234,46 @@ const ProductDetailsScreen = () => {
               )}
             </div>
 
-            <div className="flex flex-col gap-3 mb-8">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex items-center border border-[#e5e5e5] bg-white h-[50px] w-full sm:w-[120px]">
+            {/* ====== FIXED CART & QUANTITY SECTION FOR MOBILE ====== */}
+            <div className="flex flex-col gap-2 sm:gap-3 mb-8">
+              {/* Flex-row ensures they are side-by-side even on small screens */}
+              <div className="flex flex-row gap-2 sm:gap-3">
+                
+                {/* Quantity Selector - Fixed smaller width on mobile */}
+                <div className="flex items-center border border-[#e5e5e5] bg-white h-[45px] sm:h-[50px] w-[100px] sm:w-[120px] flex-shrink-0">
                   <button onClick={() => setQty(qty > 1 ? qty - 1 : 1)} className="flex-1 h-full text-gray-600 hover:bg-gray-50 transition-colors text-lg font-medium">-</button>
-                  <span className="w-12 text-center text-[15px] font-bold">{qty}</span>
+                  <span className="w-8 sm:w-12 text-center text-[14px] sm:text-[15px] font-bold">{qty}</span>
                   <button onClick={() => setQty(qty + 1)} className="flex-1 h-full text-gray-600 hover:bg-gray-50 transition-colors text-lg font-medium">+</button>
                 </div>
 
+                {/* Add to Cart Button - Flex-1 takes remaining space */}
                 <button 
                   onClick={addToCartHandler}
-                  className="flex-1 bg-white text-black border border-black h-[50px] text-[13px] sm:text-[14px] font-extrabold tracking-widest uppercase hover:bg-black hover:text-white transition-all duration-300"
+                  className="flex-1 bg-white text-black border border-black h-[45px] sm:h-[50px] text-[12px] sm:text-[14px] font-extrabold tracking-wide sm:tracking-widest uppercase hover:bg-black hover:text-white transition-all duration-300 px-1"
                 >
                   Add To Cart
                 </button>
               </div>
               
+              {/* Buy It Now Button */}
               <button 
                 onClick={buyItNowHandler}
-                className="w-full bg-[#dd3333] text-white h-[50px] text-[13px] sm:text-[14px] font-extrabold tracking-widest uppercase shadow-md hover:bg-black transition-all duration-300"
+                className="w-full bg-[#dd3333] text-white h-[45px] sm:h-[50px] text-[13px] sm:text-[14px] font-extrabold tracking-widest uppercase shadow-md hover:bg-black transition-all duration-300"
               >
                 Buy It Now
               </button>
             </div>
+            {/* ====================================================== */}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-8 sm:mb-10 text-xs sm:text-sm">
-              <div className="flex items-center gap-3 p-3 sm:p-4 bg-[#f9f9f9] border border-[#e5e5e5]"><MdEco className="text-lg sm:text-xl text-black" /> <span className="font-medium text-black">Sustainable</span></div>
-              <div className="flex items-center gap-3 p-3 sm:p-4 bg-[#f9f9f9] border border-[#e5e5e5]"><MdDesignServices className="text-lg sm:text-xl text-black" /> <span className="font-medium text-black">Tailored Fit</span></div>
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-8 sm:mb-10 text-[11px] sm:text-sm">
+              <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 p-3 sm:p-4 bg-[#f9f9f9] border border-[#e5e5e5]">
+                <MdEco className="text-lg sm:text-xl text-black flex-shrink-0" /> 
+                <span className="font-medium text-black">Sustainable</span>
+              </div>
+              <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 p-3 sm:p-4 bg-[#f9f9f9] border border-[#e5e5e5]">
+                <MdDesignServices className="text-lg sm:text-xl text-black flex-shrink-0" /> 
+                <span className="font-medium text-black">Tailored Fit</span>
+              </div>
             </div>
 
             <div className="border-t border-[#e5e5e5]">
@@ -309,7 +314,6 @@ const ProductDetailsScreen = () => {
         </div>
       </div>
 
-      {/* Related Products Area */}
       {relatedProducts.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 border-t border-[#eaeaea]">
           <div className="flex justify-between items-end border-b border-[#eaeaea] mb-6 sm:mb-8">
@@ -360,7 +364,6 @@ const ProductDetailsScreen = () => {
         </div>
       )}
 
-      {/* Reviews Area */}
       <div id="reviews" className="bg-[#f9f9f9] border-t border-[#eaeaea] py-12 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">

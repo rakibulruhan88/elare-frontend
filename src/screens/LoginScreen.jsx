@@ -133,10 +133,10 @@ const LoginScreenUI = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f3f4f6', padding: '20px', boxSizing: 'border-box' }}>
       <StyledWrapper>
         <form className="form" onSubmit={submitHandler} autoComplete="off">
-          <h2 style={{ textAlign: 'center', margin: '0 0 15px 0', fontSize: '24px', fontWeight: 'bold' }}>
+          <h2 className="form-title">
             {isForgotPassword 
               ? (forgotStep === 1 ? 'Reset Password' : 'Enter OTP & New Password') 
               : isLogin ? 'Welcome Back' : isOtpStep ? 'Verify Email' : 'Create Account'}
@@ -265,16 +265,29 @@ const LoginScreen = () => (
 );
 
 const StyledWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
   .form {
     display: flex;
     flex-direction: column;
     gap: 10px;
     background-color: #ffffff;
     padding: 30px;
-    width: 450px;
+    width: 100%; /* Changed from 450px */
+    max-width: 450px; /* Added */
     border-radius: 20px;
     box-shadow: 0px 10px 30px rgba(0,0,0,0.05);
+    box-sizing: border-box; /* Added to prevent overflow */
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  .form-title {
+    text-align: center;
+    margin: 0 0 15px 0;
+    font-size: 24px;
+    font-weight: bold;
   }
 
   ::placeholder {
@@ -395,6 +408,35 @@ const StyledWrapper = styled.div`
 
   .btn:hover {
     border: 1px solid #2d79f3;
-  }`;
+  }
+
+  /* Responsive Design for Mobile Devices */
+  @media (max-width: 480px) {
+    .form {
+      padding: 25px 20px;
+      border-radius: 15px;
+    }
+    
+    .form-title {
+      font-size: 22px;
+    }
+
+    .inputForm, .btn, .button-submit {
+      height: 45px;
+    }
+
+    .button-submit {
+      font-size: 14px;
+    }
+
+    .flex-row > div > label, .span, .p {
+      font-size: 13px;
+    }
+
+    .flex-column > label {
+      font-size: 14px;
+    }
+  }
+`;
 
 export default LoginScreen;
