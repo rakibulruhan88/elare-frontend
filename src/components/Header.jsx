@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { MdSearch, MdPersonOutline, MdOutlineShoppingBag, MdMenu, MdDashboard, MdLogout, MdPerson, MdClose, MdKeyboardArrowRight } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
+import logoImg from '../assets/ChatGPT Image Aug 19, 2026, 02_34_25 AM.png';
 
 const Header = () => {
   const [cartCount, setCartCount] = useState(0);
@@ -112,7 +113,7 @@ const Header = () => {
 
           <div className="flex-1 md:flex-none flex justify-center md:justify-start">
             <Link to="/" className="text-xl md:text-2xl font-serif font-bold tracking-widest text-gray-900 uppercase">
-              ELARE
+              <img  src={logoImg} alt="Logo" className="h-8 md:h-12 object-contain" />
             </Link>
           </div>
 

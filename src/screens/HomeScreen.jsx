@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import { MdLocalShipping, MdSecurity, MdAssignmentReturn, MdSupportAgent, MdStar } from 'react-icons/md';
+import heroDesktop from '../assets/Gemini_Generated_Image_hydcq0hydcq0hydc.jpeg';
+import heroMobile from '../assets/Gemini_Generated_Image_7793j07793j07793.jpeg';
+import brandStoryImg from '../assets/Gemini_Generated_Image_7793j07793j07793.jpeg';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -12,7 +15,8 @@ import 'swiper/css/navigation';
 const STORE_CONTENT = {
   announcement: "🔥 FREE EXPEDITED SHIPPING ON ALL ORDERS OVER 2000 BDT 🔥",
   hero: {
-    image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80",
+    imageDesktop: heroDesktop,
+    imageMobile: heroMobile,
     title: "Redefining Modern Elegance",
     subtitle: "Discover the new summer collection designed for comfort and tailored for confidence.",
     buttonText: "Shop The Collection",
@@ -23,14 +27,14 @@ const STORE_CONTENT = {
     subtitle: "Limited time offer. Elevate your everyday wardrobe.",
   },
   brandStory: {
-    image: "https://images.unsplash.com/photo-1550614000-4b95f269477b?auto=format&fit=crop&q=80",
+    image: brandStoryImg,
     title: "Crafted with Purpose.",
     description: "Every piece we create is a blend of premium materials and expert craftsmanship. We believe in sustainable fashion that doesn't compromise on style or durability. Wear it with pride.",
   },
   ugcImages: [
     "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1509631179647-0c1158b45455?auto=format&fit=crop&q=80",
+    brandStoryImg,
     "https://images.unsplash.com/photo-1485230405346-71acb9518d9c?auto=format&fit=crop&q=80"
   ]
 };
@@ -98,16 +102,27 @@ const HomeScreen = () => {
         {STORE_CONTENT.announcement}
       </div>
 
-      <div 
-        className="relative w-full h-[70vh] md:h-[85vh] bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: `url('${STORE_CONTENT.hero.image}')` }}
-      >
-        <div className="absolute inset-0 bg-black/40"></div>
+      <div className="relative w-full h-[70vh] md:h-[85vh] flex items-center justify-center overflow-hidden bg-gray-100">
+        
+        <img 
+          src={STORE_CONTENT.hero.imageDesktop} 
+          alt="Hero Desktop" 
+          className="hidden md:block absolute inset-0 w-full h-full object-cover" 
+        />
+        
+        <img 
+          src={STORE_CONTENT.hero.imageMobile} 
+          alt="Hero Mobile" 
+          className="block md:hidden absolute inset-0 w-full h-full object-cover" 
+        />
+
+        <div className="absolute inset-0 bg-black/20 z-10"></div>
+        
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="relative z-10 text-center px-4 flex flex-col items-center max-w-4xl"
+          className="relative z-20 text-center px-4 flex flex-col items-center max-w-4xl"
         >
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white mb-6 tracking-wide drop-shadow-lg">
             {STORE_CONTENT.hero.title}
@@ -176,17 +191,17 @@ const HomeScreen = () => {
                   <SwiperSlide key={col._id}>
                     <div 
                       onClick={() => navigate(`/shop?collection=${col.name}`)} 
-                      className="block bg-white border border-[#e5e5e5] overflow-hidden cursor-pointer"
+                      className="block bg-white border border-[#e5e5e5] overflow-hidden cursor-pointer group-hover:shadow-md transition-shadow"
                     >
-                      <div className="relative w-full bg-[#f4f4f4] aspect-[3/4] overflow-hidden">
+                      <div className="relative w-full aspect-[3/4]">
                         <img 
                           src={col.image} 
                           alt={col.name} 
-                          className="w-full h-full object-cover absolute top-0 left-0 hover:scale-105 transition-transform duration-700" 
+                          className="w-full h-full object-cover" 
                         />
                       </div>
                       <div className="p-4 text-center bg-white">
-                        <h3 className="m-0 text-[16px] text-black font-semibold">{col.name}</h3>
+                        <h3 className="m-0 text-[16px] text-black font-semibold uppercase tracking-wider">{col.name}</h3>
                       </div>
                     </div>
                   </SwiperSlide>
