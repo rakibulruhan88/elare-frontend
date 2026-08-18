@@ -346,7 +346,7 @@ const HomeScreen = () => {
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
               {STORE_CONTENT.brandStory.description}
             </p>
-            <Link to="/about" className="text-sm font-bold uppercase tracking-widest text-gray-900 border-b-2 border-gray-900 pb-1 hover:text-gray-500 hover:border-gray-500 transition-all">
+            <Link to="/shop" className="text-sm font-bold uppercase tracking-widest text-gray-900 border-b-2 border-gray-900 pb-1 hover:text-gray-500 hover:border-gray-500 transition-all">
               Discover Our Story
             </Link>
           </div>
