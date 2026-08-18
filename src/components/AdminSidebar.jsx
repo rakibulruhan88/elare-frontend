@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MdDashboard, MdInventory, MdPeople, MdShoppingCart, MdMessage, MdMenu, MdClose, MdLogout, MdPerson, MdCategory } from 'react-icons/md';
 
-
 const AdminSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -29,7 +28,11 @@ const AdminSidebar = () => {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className="md:hidden fixed top-4 left-4 z-40 bg-gray-900 text-white p-2 rounded-sm shadow-md">
+      {/* Mobile Hamburger Menu Button - Fixed Position Inside Top Bar */}
+      <button 
+        onClick={() => setIsOpen(true)} 
+        className="md:hidden fixed top-2.5 left-4 z-40 bg-gray-900 text-white p-1.5 rounded-md shadow-md"
+      >
         <MdMenu className="text-2xl" />
       </button>
 
