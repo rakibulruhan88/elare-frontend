@@ -52,52 +52,54 @@ const AdminCollections = () => {
   };
 
   return (
-    <div className="p-8 bg-[#f1f2f4] min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Manage Collections</h1>
+    <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Manage Collections</h1>
       
-      <form onSubmit={createHandler} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8 flex gap-4 items-end">
+      <form onSubmit={createHandler} className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-end">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Collection Name</label>
+          <label className="block text-[12px] sm:text-[13px] font-semibold text-gray-700 mb-1.5 sm:mb-2">Collection Name</label>
           <input 
             type="text" 
             value={name} 
             onChange={(e) => setName(e.target.value)} 
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-gray-900"
-            placeholder="Enter collection name"
+            className="w-full px-4 py-2.5 sm:py-2 border border-gray-300 rounded-md text-[14px] focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-colors"
+            placeholder="e.g. Summer Collection 2026"
           />
         </div>
-        <button type="submit" disabled={loading} className="bg-gray-900 text-white px-6 py-2 rounded font-bold uppercase tracking-widest hover:bg-black disabled:opacity-50">
+        <button type="submit" disabled={loading} className="w-full sm:w-auto bg-gray-900 text-white px-6 py-3 sm:py-2.5 rounded-md text-[13px] font-bold uppercase tracking-widest hover:bg-black disabled:opacity-50 transition-colors">
           {loading ? 'Creating...' : 'Create Collection'}
         </button>
       </form>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-4 text-sm font-medium text-gray-600">Collection Name</th>
-              <th className="px-6 py-4 text-sm font-medium text-gray-600 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {collections.map((col) => (
-              <tr key={col._id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 font-semibold text-gray-900">{col.name}</td>
-                <td className="px-6 py-4 text-right flex justify-end gap-4">
-                  <Link to={`/admin/collections/${col._id}`} className="text-blue-600 hover:text-blue-800 text-xl">
-                    <MdEdit />
-                  </Link>
-                  <button onClick={() => deleteHandler(col._id)} className="text-red-500 hover:text-red-700 text-xl">
-                    <MdDelete />
-                  </button>
-                </td>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full text-left min-w-[500px]">
+            <thead className="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th className="px-4 py-3 sm:px-6 sm:py-4 text-[12px] sm:text-[13px] font-bold text-gray-500 uppercase tracking-wider">Collection Name</th>
+                <th className="px-4 py-3 sm:px-6 sm:py-4 text-[12px] sm:text-[13px] font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
               </tr>
-            ))}
-            {collections.length === 0 && (
-              <tr><td colSpan="2" className="px-6 py-8 text-center text-gray-500">No collections found. Create one above!</td></tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {collections.map((col) => (
+                <tr key={col._id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-3 sm:px-6 sm:py-4 font-bold text-[13px] sm:text-[14px] text-gray-900">{col.name}</td>
+                  <td className="px-4 py-3 sm:px-6 sm:py-4 text-right flex justify-end gap-3 sm:gap-4">
+                    <Link to={`/admin/collections/${col._id}`} className="text-blue-600 hover:text-blue-800 p-1.5 bg-blue-50 rounded-md transition-colors">
+                      <MdEdit className="text-lg sm:text-xl" />
+                    </Link>
+                    <button onClick={() => deleteHandler(col._id)} className="text-red-600 hover:text-red-800 p-1.5 bg-red-50 rounded-md transition-colors">
+                      <MdDelete className="text-lg sm:text-xl" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {collections.length === 0 && (
+                <tr><td colSpan="2" className="px-6 py-10 text-center text-[13px] sm:text-[14px] text-gray-500">No collections found. Create one above!</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

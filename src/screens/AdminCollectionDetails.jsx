@@ -60,76 +60,85 @@ const AdminCollectionDetails = () => {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading collection data...</div>;
+  if (loading) return <div className="py-20 text-center text-[14px] text-gray-500 font-medium">Loading collection data...</div>;
 
   return (
-    <div className="p-8 bg-[#f1f2f4] min-h-screen">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <Link to="/admin/collections" className="p-2 hover:bg-gray-200 rounded-md transition-colors text-gray-600">
-            <MdArrowBack className="text-xl" />
+    <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6 pb-20">
+      
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Link to="/admin/collections" className="p-2 sm:p-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors text-gray-600">
+            <MdArrowBack className="text-lg sm:text-xl" />
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Editing Collection: <span className="text-blue-600">{collection?.name}</span>
-          </h1>
+          <div>
+             <p className="text-[10px] sm:text-[11px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Editing Collection</p>
+             <h1 className="text-lg sm:text-2xl font-extrabold text-[#dd3333] line-clamp-1">{collection?.name}</h1>
+          </div>
         </div>
         <button 
           onClick={saveHandler} 
           disabled={saving} 
-          className="bg-gray-900 text-white px-6 py-2 rounded font-bold uppercase tracking-widest hover:bg-black disabled:opacity-50"
+          className="w-full sm:w-auto bg-gray-900 text-white px-6 py-3 sm:py-2.5 rounded-md text-[13px] font-bold uppercase tracking-widest hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
         >
           {saving ? 'Saving...' : 'Save Collection'}
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 bg-gray-50">
-          <h2 className="text-lg font-semibold text-gray-900">Manage Products in this Collection</h2>
-          <p className="text-sm text-gray-500 mt-1">Select the products you want to appear in the "{collection?.name}" collection.</p>
+      {/* Product List Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-gray-100 bg-[#fbfbfb]">
+          <h2 className="text-[15px] sm:text-[16px] font-bold text-gray-900">Manage Products</h2>
+          <p className="text-[12px] sm:text-[13px] text-gray-500 mt-1">Select the products you want to appear in this collection.</p>
         </div>
         
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-4 w-16"></th>
-              <th className="px-6 py-4 text-sm font-medium text-gray-600">Product Details</th>
-              <th className="px-6 py-4 text-sm font-medium text-gray-600">Price</th>
-              <th className="px-6 py-4 text-sm font-medium text-gray-600">Current Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {products.map((product) => (
-              <tr key={product._id} className="hover:bg-gray-50 cursor-pointer" onClick={() => handleCheckboxChange(product._id)}>
-                <td className="px-6 py-4 text-center">
-                  <input 
-                    type="checkbox" 
-                    checked={selectedProducts.includes(product._id)}
-                    onChange={() => handleCheckboxChange(product._id)}
-                    className="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900 cursor-pointer"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </td>
-                <td className="px-6 py-4 flex items-center gap-4">
-                  <img 
-                    src={product.images?.[0] || product.image || '/images/sample.jpg'} 
-                    alt={product.name} 
-                    className="w-12 h-12 object-cover rounded border border-gray-200"
-                  />
-                  <span className="font-medium text-gray-900">{product.name}</span>
-                </td>
-                <td className="px-6 py-4 text-gray-600">Tk {product.price}</td>
-                <td className="px-6 py-4">
-                  <span className={`px-2 py-1 text-xs rounded-full ${product.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+        {/* Mobile Optimized Flexbox List (Replaced Table) */}
+        <div className="flex flex-col divide-y divide-gray-100">
+          {products.map((product) => (
+            <label 
+              key={product._id} 
+              className="flex items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+            >
+              <div className="pt-2.5 sm:pt-0 pl-1 sm:pl-2">
+                <input 
+                  type="checkbox" 
+                  checked={selectedProducts.includes(product._id)}
+                  onChange={() => handleCheckboxChange(product._id)}
+                  className="w-4 h-4 sm:w-5 sm:h-5 rounded border-gray-300 text-gray-900 focus:ring-gray-900 cursor-pointer accent-gray-900"
+                />
+              </div>
+              
+              <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 border border-gray-200 rounded-md overflow-hidden bg-white">
+                <img 
+                  src={product.images?.[0] || product.image || '/images/sample.jpg'} 
+                  alt={product.name} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
+                <div className="flex-1">
+                  <span className="font-bold text-[13px] sm:text-[14px] text-gray-900 line-clamp-2 leading-snug">{product.name}</span>
+                  <span className="sm:hidden text-[12px] font-bold text-gray-600 block mt-0.5">Tk {product.price}</span>
+                </div>
+                
+                <div className="hidden sm:block text-[14px] font-bold text-gray-600 w-24 text-right">
+                  Tk {product.price}
+                </div>
+                
+                <div className="mt-1.5 sm:mt-0 w-24 sm:text-right">
+                  <span className={`inline-flex px-2 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest rounded ${product.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
                     {product.status || 'Active'}
                   </span>
-                </td>
-              </tr>
-            ))}
-            {products.length === 0 && (
-              <tr><td colSpan="4" className="px-6 py-8 text-center text-gray-500">No products found in your store.</td></tr>
-            )}
-          </tbody>
-        </table>
+                </div>
+              </div>
+            </label>
+          ))}
+          
+          {products.length === 0 && (
+            <div className="p-10 text-center text-[13px] sm:text-[14px] text-gray-500">No products found in your store.</div>
+          )}
+        </div>
       </div>
     </div>
   );

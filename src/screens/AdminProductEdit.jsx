@@ -146,136 +146,215 @@ const AdminProductEdit = () => {
   };
 
   if (loadingFetch) {
-    return <div className="min-h-screen flex items-center justify-center font-semibold text-gray-500">Loading product details...</div>;
+    return <div className="py-20 text-center font-medium text-gray-500">Loading product details...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-[#f1f2f4] p-4 md:p-14 -mx-4 md:-mx-8 -my-4 md:-my-8 font-sans">
-      <form onSubmit={submitHandler} className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+    <div className="max-w-5xl mx-auto pb-24 font-sans space-y-4 sm:space-y-6">
+      
+      <form onSubmit={submitHandler} className="space-y-4 sm:space-y-6">
+        
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm sticky top-0 z-20 md:static">
           <div className="flex items-center gap-3">
-            <Link to="/admin/products" className="p-1.5 hover:bg-gray-200 rounded-md transition-colors text-gray-600"><MdArrowBack className="text-xl" /></Link>
-            <h1 className="text-xl font-bold text-gray-900">Edit product</h1>
+            <Link to="/admin/products" className="p-2 sm:p-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors text-gray-600 flex-shrink-0">
+              <MdArrowBack className="text-lg sm:text-xl" />
+            </Link>
+            <div className="min-w-0">
+              <p className="text-[10px] sm:text-[11px] text-gray-500 font-bold uppercase tracking-wider mb-0.5">Edit Product</p>
+              <h1 className="text-lg sm:text-xl font-extrabold text-gray-900 line-clamp-1">{name || 'Unnamed Product'}</h1>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button type="button" onClick={() => navigate('/admin/products')} className="text-sm font-medium text-gray-700 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors">Discard</button>
-            <button type="submit" disabled={loadingUpdate} className="bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium px-4 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-2">
-              {loadingUpdate ? 'Updating...' : 'Save changes'}
+          
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+            <button type="button" onClick={() => navigate('/admin/products')} className="flex-1 sm:flex-none text-[13px] font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 px-4 py-3 sm:py-2.5 rounded-md transition-colors border border-gray-200 text-center">
+              Discard
+            </button>
+            <button type="submit" disabled={loadingUpdate} className="flex-1 sm:flex-none bg-gray-900 hover:bg-black text-white text-[13px] font-bold px-4 py-3 sm:py-2.5 rounded-md shadow-sm transition-colors text-center disabled:opacity-50">
+              {loadingUpdate ? 'Updating...' : 'Save Changes'}
             </button>
           </div>
         </div>
 
-        {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm">{error}</div>}
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">{error}</div>}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-              <div className="mb-5">
-                <label className="block text-[13px] font-medium text-gray-700 mb-1">Title</label>
-                <input type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-start">
+          
+
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+            
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <div className="mb-4 sm:mb-5">
+                <label className="block text-[13px] sm:text-[14px] font-bold text-gray-800 mb-1.5">Title</label>
+                <input 
+                  type="text" 
+                  required 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-[16px] sm:text-[14px] text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 transition-colors" 
+                  placeholder="e.g. Premium Cotton Panjabi"
+                />
               </div>
+              
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1">Description</label>
-                <div className="border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
-                  <div className="bg-gray-50 border-b border-gray-300 px-3 py-2 flex items-center gap-2 text-gray-500">
-                    <button type="button" className="p-1 hover:bg-gray-200 rounded"><MdFormatBold /></button>
-                    <button type="button" className="p-1 hover:bg-gray-200 rounded"><MdFormatItalic /></button>
-                    <button type="button" className="p-1 hover:bg-gray-200 rounded"><MdFormatUnderlined /></button>
-                    <div className="w-px h-4 bg-gray-300 mx-1"></div>
-                    <button type="button" className="p-1 hover:bg-gray-200 rounded"><MdFormatListBulleted /></button>
+                <label className="block text-[13px] sm:text-[14px] font-bold text-gray-800 mb-1.5">Description</label>
+                <div className="border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-gray-900 focus-within:border-gray-900 transition-colors">
+
+                  <div className="bg-gray-50 border-b border-gray-300 px-3 py-2 flex flex-wrap items-center gap-1 sm:gap-2 text-gray-600">
+                    <button type="button" className="p-1.5 hover:bg-gray-200 rounded text-lg"><MdFormatBold /></button>
+                    <button type="button" className="p-1.5 hover:bg-gray-200 rounded text-lg"><MdFormatItalic /></button>
+                    <button type="button" className="p-1.5 hover:bg-gray-200 rounded text-lg"><MdFormatUnderlined /></button>
+                    <div className="w-px h-5 bg-gray-300 mx-1"></div>
+                    <button type="button" className="p-1.5 hover:bg-gray-200 rounded text-lg"><MdFormatListBulleted /></button>
                   </div>
 
-                  <textarea rows="8" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full px-3 py-3 text-[14px] text-gray-900 focus:outline-none resize-y min-h-[150px]"></textarea>
+                  <textarea 
+                    rows="6" 
+                    value={description} 
+                    onChange={(e) => setDescription(e.target.value)} 
+                    className="w-full px-3 py-3 text-[16px] sm:text-[14px] text-gray-900 focus:outline-none resize-y min-h-[120px]"
+                    placeholder="Describe your product..."
+                  ></textarea>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-              <h2 className="text-[14px] font-semibold text-gray-900 mb-4">Media</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <h2 className="text-[14px] sm:text-[15px] font-bold text-gray-900 mb-3 sm:mb-4">Media</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {images.map((img, index) => (
-                  <div key={index} draggable onDragStart={(e) => (dragItem.current = index)} onDragEnter={(e) => (dragOverItem.current = index)} onDragEnd={handleSort} onDragOver={(e) => e.preventDefault()} className={`relative rounded-xl border border-gray-200 overflow-hidden cursor-move group hover:shadow-md transition-shadow bg-gray-50 ${index === 0 ? 'col-span-2 row-span-2 aspect-square' : 'aspect-square'}`}>
+                  <div 
+                    key={index} 
+                    draggable 
+                    onDragStart={(e) => (dragItem.current = index)} 
+                    onDragEnter={(e) => (dragOverItem.current = index)} 
+                    onDragEnd={handleSort} 
+                    onDragOver={(e) => e.preventDefault()} 
+                    className={`relative rounded-lg border border-gray-200 overflow-hidden cursor-move group bg-gray-50 ${index === 0 ? 'col-span-2 row-span-2 aspect-square' : 'aspect-square'}`}
+                  >
                     <img src={img} alt={`Product ${index}`} className="w-full h-full object-cover" />
-                    {index === 0 && <span className="absolute bottom-2 left-2 bg-white/90 text-gray-800 text-[11px] font-bold px-2 py-1 rounded shadow-sm">Main image</span>}
-                    <button type="button" onClick={() => handleRemoveImage(index)} className="absolute top-2 right-2 bg-white/90 text-gray-600 hover:text-red-600 p-1.5 rounded-lg shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"><MdClose className="text-lg" /></button>
+                    {index === 0 && <span className="absolute bottom-2 left-2 bg-white/95 text-gray-800 text-[10px] sm:text-[11px] font-bold px-2 py-1 rounded shadow-sm border border-gray-100">Main image</span>}
+                    <button 
+                      type="button" 
+                      onClick={() => handleRemoveImage(index)} 
+                      className="absolute top-2 right-2 bg-white text-gray-600 hover:text-red-600 p-1.5 rounded-md shadow-sm border border-gray-100 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <MdClose className="text-sm sm:text-base" />
+                    </button>
                   </div>
                 ))}
-                <div className={`border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-center hover:bg-gray-50 transition-colors relative overflow-hidden ${images.length === 0 ? 'col-span-2 sm:col-span-4 p-12' : 'aspect-square p-4'}`}>
+                
+                <div className={`border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-center hover:bg-gray-50 transition-colors relative overflow-hidden bg-[#fbfbfb] ${images.length === 0 ? 'col-span-2 sm:col-span-4 p-8 sm:p-12' : 'aspect-square p-2 sm:p-4'}`}>
                   <input type="file" multiple onChange={uploadFileHandler} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
                   <div className="flex flex-col items-center relative z-0">
-                    <div className="w-10 h-10 bg-white shadow-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-500 mb-2"><MdImage className="text-xl" /></div>
-                    <span className="text-[13px] text-blue-600 font-medium mb-0.5">Add files</span>
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white shadow-sm border border-gray-200 rounded-md flex items-center justify-center text-gray-500 mb-2">
+                      <MdImage className="text-lg sm:text-xl" />
+                    </div>
+                    {uploading ? (
+                      <span className="text-[12px] sm:text-[13px] text-gray-500 font-medium animate-pulse">Uploading...</span>
+                    ) : (
+                      <span className="text-[12px] sm:text-[13px] text-blue-600 font-medium">Add files</span>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-              <h2 className="text-[14px] font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
 
-              <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <h2 className="text-[14px] sm:text-[15px] font-bold text-gray-900 mb-3 sm:mb-4">Pricing & Inventory</h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-gray-700 mb-1">Price</label>
+                  <label className="block text-[13px] sm:text-[14px] font-bold text-gray-800 mb-1.5">Price</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">$</span>
-                    <input type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(Number(e.target.value))} className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-[14px] font-bold">৳</span>
+                    <input 
+                      type="number" min="0" step="0.01" 
+                      value={price} onChange={(e) => setPrice(Number(e.target.value))} 
+                      className="w-full pl-7 pr-3 py-2.5 border border-gray-300 rounded-md text-[16px] sm:text-[14px] focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 transition-colors" 
+                    />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[13px] font-medium text-gray-700 mb-1">Compare at price</label>
+                  <label className="block text-[13px] sm:text-[14px] font-bold text-gray-800 mb-1.5">Compare at price</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">$</span>
-                    <input type="number" min="0" step="0.01" value={compareAtPrice} onChange={(e) => setCompareAtPrice(Number(e.target.value))} className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-[14px] font-bold">৳</span>
+                    <input 
+                      type="number" min="0" step="0.01" 
+                      value={compareAtPrice} onChange={(e) => setCompareAtPrice(Number(e.target.value))} 
+                      className="w-full pl-7 pr-3 py-2.5 border border-gray-300 rounded-md text-[16px] sm:text-[14px] focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 transition-colors" 
+                    />
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[13px] font-medium text-gray-700 mb-1">Available Inventory</label>
-                  <input type="number" min="0" value={countInStock} onChange={(e) => setCountInStock(Number(e.target.value))} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                </div>
+              
+              <div>
+                <label className="block text-[13px] sm:text-[14px] font-bold text-gray-800 mb-1.5">Available Inventory</label>
+                <input 
+                  type="number" min="0" 
+                  value={countInStock} onChange={(e) => setCountInStock(Number(e.target.value))} 
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-[16px] sm:text-[14px] focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 transition-colors" 
+                />
               </div>
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-              <h2 className="text-[14px] font-semibold text-gray-900 mb-4">Status</h2>
-              <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white cursor-pointer">
+
+          <div className="space-y-4 sm:space-y-6">
+            
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <h2 className="text-[14px] sm:text-[15px] font-bold text-gray-900 mb-3">Status</h2>
+              <select 
+                value={status} onChange={(e) => setStatus(e.target.value)} 
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-[16px] sm:text-[14px] text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 bg-white cursor-pointer"
+              >
                 <option value="Active">Active</option>
                 <option value="Draft">Draft</option>
               </select>
             </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-              <h2 className="text-[14px] font-semibold text-gray-900 mb-4">Product organization</h2>
+            
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <h2 className="text-[14px] sm:text-[15px] font-bold text-gray-900 mb-4">Product organization</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-gray-700 mb-1">Vendor</label>
-                  <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <label className="block text-[13px] sm:text-[14px] font-bold text-gray-800 mb-1.5">Vendor / Brand</label>
+                  <input 
+                    type="text" value={brand} onChange={(e) => setBrand(e.target.value)} 
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-[16px] sm:text-[14px] focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 transition-colors" 
+                  />
                 </div>
                 <div>
-                  <label className="block text-[13px] font-medium text-gray-700 mb-1">Category</label>
-                  <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[14px] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <label className="block text-[13px] sm:text-[14px] font-bold text-gray-800 mb-1.5">Category</label>
+                  <input 
+                    type="text" value={category} onChange={(e) => setCategory(e.target.value)} 
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-md text-[16px] sm:text-[14px] focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 transition-colors" 
+                  />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-              <h2 className="text-[14px] font-semibold text-gray-900 mb-4">Collections</h2>
-              <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-2">
+            {/* Collections Selection */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <h2 className="text-[14px] sm:text-[15px] font-bold text-gray-900 mb-3">Collections</h2>
+              <div className="space-y-2.5 max-h-48 overflow-y-auto custom-scrollbar pr-2 bg-gray-50 border border-gray-100 p-3 rounded-md">
                 {collectionsList.map((col) => (
-                  <label key={col._id} className="flex items-center gap-2 cursor-pointer">
+                  <label key={col._id} className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 p-1.5 -ml-1.5 rounded transition-colors">
                     <input 
                       type="checkbox" 
                       checked={selectedCollections.includes(col.name)}
                       onChange={() => handleCollectionChange(col.name)}
-                      className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                      className="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900 accent-gray-900"
                     />
-                    <span className="text-[13px] text-gray-700">{col.name}</span>
+                    <span className="text-[13px] sm:text-[14px] font-medium text-gray-700">{col.name}</span>
                   </label>
                 ))}
                 {collectionsList.length === 0 && (
-                  <p className="text-xs text-gray-500">No collections found.</p>
+                  <p className="text-[12px] sm:text-[13px] text-gray-500 italic">No collections found.</p>
                 )}
               </div>
             </div>

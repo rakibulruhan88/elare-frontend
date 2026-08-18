@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Papa from 'papaparse';
-import { MdSearch, MdDelete, MdCheckCircle, MdPerson } from 'react-icons/md';
+import { MdSearch, MdDelete, MdCheckCircle, MdPerson, MdAdd } from 'react-icons/md';
 
 const AdminCustomerList = () => {
   const [users, setUsers] = useState([]);
@@ -44,7 +44,6 @@ const AdminCustomerList = () => {
     }
   };
 
-
   const handleExportCSV = () => {
     const exportData = users.map(u => ({
       'Customer ID': u._id,
@@ -64,9 +63,7 @@ const AdminCustomerList = () => {
     document.body.removeChild(link);
   };
 
-  // ==========================================
-  // IMPORT CSV LOGIC (Basic)
-  // ==========================================
+
   const handleImportCSV = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -83,7 +80,6 @@ const AdminCustomerList = () => {
           const rows = results.data;
           
           for (const row of rows) {
-
             if(row.Name && row.Email) {
                 await axios.post('/api/users', {
                     name: row.Name,
@@ -109,100 +105,159 @@ const AdminCustomerList = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f1f2f4] p-4 md:p-14 -mx-4 md:-mx-8 -my-4 md:-my-8 font-sans">
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-        <h1 className="text-xl font-bold text-gray-900">Customers</h1>
-        <div className="flex items-center gap-2">
-          <button onClick={handleExportCSV} className="text-[13px] font-medium text-gray-700 hover:bg-gray-200 px-3 py-1.5 rounded-lg border border-gray-300 bg-white shadow-sm transition-colors">
+    <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 pb-10">
+      
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Customers</h1>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <button onClick={handleExportCSV} className="text-[12px] sm:text-[13px] font-medium text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-lg border border-gray-300 bg-white shadow-sm transition-colors">
             Export
           </button>
           
           <input type="file" accept=".csv" ref={fileInputRef} onChange={handleImportCSV} className="hidden" />
-          <button onClick={() => fileInputRef.current.click()} className="text-[13px] font-medium text-gray-700 hover:bg-gray-200 px-3 py-1.5 rounded-lg border border-gray-300 bg-white shadow-sm transition-colors">
+          <button onClick={() => fileInputRef.current.click()} className="text-[12px] sm:text-[13px] font-medium text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-lg border border-gray-300 bg-white shadow-sm transition-colors">
             Import
           </button>
 
-          <button onClick={() => navigate('/admin/customers/create')} className="bg-gray-900 hover:bg-gray-800 text-white text-[13px] font-medium px-4 py-1.5 rounded-lg shadow-sm transition-colors flex items-center gap-1 ml-2">
-            Add customer
+          <button 
+            onClick={() => navigate('/admin/customers/create')} 
+            className="bg-gray-900 hover:bg-black text-white text-[12px] sm:text-[13px] font-bold px-4 py-2 rounded-lg shadow-sm transition-colors flex items-center gap-1.5 ml-auto sm:ml-0"
+          >
+            <MdAdd className="text-lg" /> Add customer
           </button>
         </div>
       </div>
 
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm">{error}</div>}
+      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm font-medium">{error}</div>}
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-2 border-b border-gray-200 flex items-center gap-2">
-          <div className="flex items-center px-3 py-1.5 rounded-md bg-gray-100">
-            <span className="text-[13px] font-medium text-gray-700">All customers</span>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+        
+        {/* Search Bar */}
+        <div className="p-3 border-b border-gray-200 flex items-center gap-2 bg-[#fbfbfb]">
+          <div className="flex items-center px-3 py-1.5 rounded-md bg-gray-100 border border-gray-200 flex-shrink-0">
+            <span className="text-[12px] sm:text-[13px] font-bold text-gray-700">All customers</span>
           </div>
-          <div className="flex-1 ml-2 relative">
-            <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+          <div className="flex-1 relative">
+            <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg sm:text-xl" />
             <input 
               type="text" 
-              placeholder="Search customers by name or email"
+              placeholder="Search customers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-1.5 bg-gray-100/50 hover:bg-gray-100 focus:bg-white border border-transparent focus:border-blue-500 rounded-lg text-[14px] text-gray-900 focus:outline-none transition-colors"
+              className="w-full pl-9 pr-4 py-2 bg-white hover:bg-gray-50 focus:bg-white border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 rounded-lg text-[13px] sm:text-[14px] text-gray-900 focus:outline-none transition-colors"
             />
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          {loading ? (
-            <div className="p-8 text-center text-gray-500 text-sm">Loading customers...</div>
-          ) : (
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/50">
-                  <th className="px-4 py-3 text-[13px] font-medium text-gray-700 pl-6">Customer Name</th>
-                  <th className="px-4 py-3 text-[13px] font-medium text-gray-700">Email Address</th>
-                  <th className="px-4 py-3 text-[13px] font-medium text-gray-700 text-center">Admin Role</th>
-                  <th className="px-4 py-3 text-[13px] font-medium text-gray-700 text-right pr-6">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
+
+        {loading ? (
+          <div className="p-10 text-center text-gray-500 text-[14px] font-medium">Loading customers...</div>
+        ) : (
+          <>
+
+            <div className="block md:hidden">
+              <div className="flex flex-col divide-y divide-gray-100">
                 {filteredUsers.map((user) => (
-                  <tr 
+                  <div 
                     key={user._id} 
-                    className="hover:bg-gray-50 transition-colors group cursor-pointer"
+                    className="p-4 flex flex-col gap-3 cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => navigate(`/admin/customers/${user._id}/edit`)}
                   >
-                    <td className="px-4 py-3 pl-6">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
+                        <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center font-bold text-[14px] border border-blue-100">
                           {user.name.charAt(0).toUpperCase()}
                         </div>
-                        <span className="text-[14px] font-semibold text-gray-900 group-hover:underline">
-                          {user.name}
-                        </span>
+                        <div className="flex flex-col">
+                           <span className="text-[14px] font-bold text-gray-900 line-clamp-1">{user.name}</span>
+                           <span className="text-[12px] text-gray-500 line-clamp-1">{user.email}</span>
+                        </div>
                       </div>
-                    </td>
-                    <td className="px-4 py-3 text-[14px] text-gray-600">{user.email}</td>
-                    <td className="px-4 py-3 text-center">
-                      {user.isAdmin ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[12px] font-medium bg-green-100 text-green-800 border border-green-200">
-                          <MdCheckCircle /> Admin
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[12px] font-medium bg-gray-100 text-gray-600 border border-gray-300">
-                           Customer
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-right pr-6">
+                      
+
                       <button 
                         onClick={(e) => { e.stopPropagation(); deleteHandler(user._id, user.name); }}
-                        className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                        className="text-gray-400 hover:text-red-600 p-2 rounded-md hover:bg-red-50 transition-colors"
                       >
                         <MdDelete className="text-xl" />
                       </button>
-                    </td>
-                  </tr>
+                    </div>
+
+                    <div className="flex items-center pl-13 ml-[52px]">
+                      {user.isAdmin ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 border border-green-200">
+                          <MdCheckCircle className="text-[12px]" /> Admin
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600 border border-gray-200">
+                           Customer
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+              </div>
+            </div>
+
+            <div className="hidden md:block overflow-x-auto custom-scrollbar">
+              <table className="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                  <tr className="border-b border-gray-200 bg-gray-50/80">
+                    <th className="px-6 py-4 text-[12px] font-bold text-gray-500 uppercase tracking-wider">Customer Details</th>
+                    <th className="px-6 py-4 text-[12px] font-bold text-gray-500 uppercase tracking-wider text-center">Role</th>
+                    <th className="px-6 py-4 text-[12px] font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {filteredUsers.map((user) => (
+                    <tr 
+                      key={user._id} 
+                      className="hover:bg-gray-50 transition-colors group cursor-pointer"
+                      onClick={() => navigate(`/admin/customers/${user._id}/edit`)}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center font-bold text-[14px] border border-blue-100">
+                            {user.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex flex-col">
+                             <span className="text-[14px] font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{user.name}</span>
+                             <span className="text-[13px] text-gray-500">{user.email}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        {user.isAdmin ? (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-green-100 text-green-700 border border-green-200">
+                            <MdCheckCircle className="text-[14px]" /> Admin
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600 border border-gray-200">
+                             Customer
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); deleteHandler(user._id, user.name); }}
+                          className="text-gray-400 hover:text-red-600 p-2 rounded-md hover:bg-red-50 transition-colors"
+                          title="Delete Customer"
+                        >
+                          <MdDelete className="text-xl" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {filteredUsers.length === 0 && (
+              <div className="p-10 text-center text-gray-500 text-[13px]">No customers match your search.</div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
