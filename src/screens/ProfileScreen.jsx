@@ -245,4 +245,4 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default ProfileScreen; 
