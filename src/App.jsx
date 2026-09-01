@@ -32,7 +32,7 @@ import Chatbot from './components/Chatbot';
 import AdminAILogsScreen from './screens/AdminAILogsScreen';
 import axios from 'axios';
 
-// axios.defaults.baseURL = 'https://elare-api.onrender.com';
+axios.defaults.baseURL = 'https://elare-api.onrender.com';
 
 
 const queryClient = new QueryClient({

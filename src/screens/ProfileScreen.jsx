@@ -97,7 +97,7 @@ const ProfileScreen = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
-          {/* Profile Update Form */}
+
           <div className="lg:col-span-1">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">User Profile</h2>
             {message && <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-sm">{message}</div>}
